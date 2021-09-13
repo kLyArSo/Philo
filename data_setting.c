@@ -16,7 +16,7 @@ void    set_game_info(t_argv  *game_args)
 {
     game_args->number_of_philosophers = 10;
     game_args->number_of_forks = game_args->number_of_philosophers;
-    game_args->time_to_die = 210; //in ms
+    game_args->time_to_die = 200; //in ms
     game_args->time_to_eat = 100; // in ms
     game_args->time_to_sleep = 100; // in ms
     game_args->number_of_times_each_philosopher_must_eat = 1;

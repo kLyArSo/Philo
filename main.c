@@ -24,7 +24,7 @@ void    *checker_meal(void    *ptr)
             break ;
     }
     x = MIN_MEAL_REACHED;
-    printf("                  MIN_MEAL_REACHED\n");
+    printf("MIN_MEAL_REACHED\nEND OF SIMULATION\n");
     return (NULL);
 }
 
@@ -42,7 +42,7 @@ void    *checker_death(void    *ptr)
         {
             current_timestamp = (current_time.tv_sec * 1000 + current_time.tv_usec / 1000)
                     - (start_time.tv_sec * 1000 + start_time.tv_usec / 1000);
-            if (current_timestamp < data->next_meal)
+            if (current_timestamp < data[i].next_meal)
                 i++;
             else
                 break ;
@@ -53,7 +53,7 @@ void    *checker_death(void    *ptr)
             break ;
     }
     x = PHILOSOPHER_DEATH;
-    printf("                  PHILOSOPHER_DEATH\n");
+    print_status("died.\nEND OF SIMULATION", i);
     return (NULL);
 }
 
