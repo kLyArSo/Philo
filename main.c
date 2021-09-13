@@ -1,21 +1,72 @@
 #include "header.h"
+#define MIN_MEAL_REACHED 98
+#define PHILOSOPHER_DEATH 100
 
-int     min_meal_check(t_philo_data *data)
+int x = 0;
+void    *checker_meal(void    *ptr)
 {
+    t_philo_data    *data;
     int i;
 
-    i = 0;
-    while (i < game_args->number_of_philosophers)
+
+    data = (t_philo_data *)ptr;
+    while(1)
     {
-        if (data[i].meal_counter == game_args->number_of_times_each_philosopher_must_eat)
-            i++;
+        i = 0;
+        while (i < game_args->number_of_philosophers)
+        {
+            if (data[i].meal_counter == game_args->number_of_times_each_philosopher_must_eat)
+                i++;
+            else
+                break ;
+        }
+        if (i == game_args->number_of_philosophers)
+            break ;
+    }
+    x = MIN_MEAL_REACHED;
+    printf("                  MIN_MEAL_REACHED\n");
+    return (NULL);
+}
+
+void    *checker_death(void    *ptr)
+{
+    t_philo_data    *data;
+    int             i;
+    int             current_timestamp;
+
+    data = (t_philo_data *)ptr;
+    while(1)
+    {
+        i = 0;
+        while (i < game_args->number_of_philosophers)
+        {
+            current_timestamp = (current_time.tv_sec * 1000 + current_time.tv_usec / 1000)
+                    - (start_time.tv_sec * 1000 + start_time.tv_usec / 1000);
+            if (current_timestamp < data->next_meal)
+                i++;
+            else
+                break ;
+        }
+        if (i == game_args->number_of_philosophers)
+            continue ;
         else
             break ;
     }
-    if (i == game_args->number_of_philosophers)
-        return (SUCCESS);
-    else
-        return (FAILURE);
+    x = PHILOSOPHER_DEATH;
+    printf("                  PHILOSOPHER_DEATH\n");
+    return (NULL);
+}
+
+void    checker_wave_deployment(t_philo_data    *data)
+{
+    pthread_t   min_meal;
+    pthread_t   death;
+
+    pthread_create(&min_meal, NULL, checker_meal, (void    *)data);
+    pthread_create(&death, NULL, checker_death, (void    *)data);
+    pthread_join(min_meal, NULL);
+    pthread_join(death, NULL);
+    
 }
 
 int     main(int argc, char **argv)
@@ -23,7 +74,7 @@ int     main(int argc, char **argv)
     int i;
     pthread_t           *philosophers;
     t_philo_data        *data;
-
+    int ret_value;
     i = 0;
     gettimeofday(&start_time, NULL);
     game_args = malloc(sizeof(t_argv));
@@ -39,9 +90,7 @@ int     main(int argc, char **argv)
     forks_init();
     first_wave_deployment(philosophers, data);
     second_wave_deployment(philosophers, data);
-    while (min_meal_check(data) != SUCCESS)
-        ;
-    printf("\n\n\nSUCCESSSS\n\n\n");
+    checker_wave_deployment(data);
     join_the_bunch(philosophers);
     return (0);
 }
