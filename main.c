@@ -1,8 +1,5 @@
 #include "header.h"
-#define MIN_MEAL_REACHED 98
-#define PHILOSOPHER_DEATH 100
 
-int x = 0;
 void    *checker_meal(void    *ptr)
 {
     t_philo_data    *data;
@@ -23,8 +20,10 @@ void    *checker_meal(void    *ptr)
         if (i == game_args->number_of_philosophers)
             break ;
     }
-    x = MIN_MEAL_REACHED;
     printf("MIN_MEAL_REACHED\nEND OF SIMULATION\n");
+    pthread_mutex_lock(&lock);
+    pthread_mutex_lock(&mutex);
+    x = MIN_MEAL_REACHED;
     return (NULL);
 }
 
@@ -52,8 +51,10 @@ void    *checker_death(void    *ptr)
         else
             break ;
     }
-    x = PHILOSOPHER_DEATH;
     print_status("died.\nEND OF SIMULATION", i);
+    pthread_mutex_lock(&lock);
+    pthread_mutex_lock(&mutex);
+    x = PHILOSOPHER_DEATH;
     return (NULL);
 }
 
@@ -76,8 +77,11 @@ int     main(int argc, char **argv)
     t_philo_data        *data;
     int ret_value;
     i = 0;
+    x = 0;
     gettimeofday(&start_time, NULL);
     game_args = malloc(sizeof(t_argv));
+    pthread_mutex_init(&mutex, NULL);
+    pthread_mutex_init(&lock, NULL);
     if (!game_args)
         return (0);
     set_game_info(game_args);
