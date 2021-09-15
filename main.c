@@ -65,8 +65,6 @@ void    checker_wave_deployment(t_philo_data    *data)
 
     pthread_create(&min_meal, NULL, checker_meal, (void    *)data);
     pthread_create(&death, NULL, checker_death, (void    *)data);
-    pthread_join(min_meal, NULL);
-    pthread_join(death, NULL);
     
 }
 
@@ -95,6 +93,13 @@ int     main(int argc, char **argv)
     first_wave_deployment(philosophers, data);
     second_wave_deployment(philosophers, data);
     checker_wave_deployment(data);
-    join_the_bunch(philosophers);
+    while(1)
+    {
+        if (x == PHILOSOPHER_DEATH || x == MIN_MEAL_REACHED)
+            return (1);
+    }
+    //join_the_bunch(philosophers);
+    //pthread_join(min_meal, NULL);
+    //pthread_join(death, NULL);
     return (0);
 }

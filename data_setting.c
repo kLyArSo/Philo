@@ -9,7 +9,7 @@ void    print_status(char *str, int x)
     gettimeofday(&current_time, NULL);
     time_stamp = (current_time.tv_sec * 1000 + current_time.tv_usec / 1000)
     - (start_time.tv_sec * 1000 + start_time.tv_usec / 1000);
-    //usleep(5);
+    usleep(5);
 
     pthread_mutex_lock(&lock);
     printf("[%d ms] Philospher %d %s.\n",time_stamp, x + 1, str);
@@ -22,10 +22,10 @@ void    set_game_info(t_argv  *game_args)
 {
     game_args->number_of_philosophers = 10;
     game_args->number_of_forks = game_args->number_of_philosophers;
-    game_args->time_to_die = 200; //in ms
+    game_args->time_to_die = 50; //in ms
     game_args->time_to_eat = 20; // in ms
     game_args->time_to_sleep = 10; // in ms
-    game_args->number_of_times_each_philosopher_must_eat = 1;
+    game_args->number_of_times_each_philosopher_must_eat = 10;
 }
 
 void    set_philo_data(t_philo_data *data, t_argv  *game_args)
